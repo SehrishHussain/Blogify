@@ -1,0 +1,58 @@
+[
+  {
+    "id": "post_1",
+    "title": "The Future of Blogging with React",
+    "slug": "future-of-blogging-react",
+    "content": "Exploring how React and modern frameworks make building blogs easier and more scalable.",
+    "featuredImage": null,
+    "status": "active",
+    "userId": "user_1",
+    "views": 120,
+    "tags": [],
+    "createdAt": "2025-01-12T10:15:00Z",
+    "updatedAt": "2025-01-12T10:15:00Z",
+    "redirects": []
+  },
+  {
+    "id": "post_2",
+    "title": "Traveling Sustainably in Gilgit Baltistan",
+    "slug": "sustainable-travel-gb",
+    "content": "Tips and insights for eco-friendly travel in the mountainous regions of Gilgit Baltistan.",
+    "featuredImage": null,
+    "status": "active",
+    "userId": "user_2",
+    "views": 85,
+    "tags": [],
+    "createdAt": "2025-02-07T08:40:00Z",
+    "updatedAt": "2025-02-07T08:40:00Z",
+    "redirects": []
+  },
+  {
+    "id": "post_3",
+    "title": "Why Readers Matter More Than Ever",
+    "slug": "why-readers-matter",
+    "content": "A reflection on the importance of active readers in shaping the blogosphere.",
+    "featuredImage": null,
+    "status": "active",
+    "userId": "user_3",
+    "views": 42,
+    "tags": [],
+    "createdAt": "2025-03-18T16:05:00Z",
+    "updatedAt": "2025-03-18T16:05:00Z",
+    "redirects": []
+  },
+  {
+    "id": "post_4",
+    "title": "Building Role-Based Access in Your Blog",
+    "slug": "role-based-access-blog",
+    "content": "Step-by-step guide to implementing admin, author, and reader roles in your blog app.",
+    "featuredImage": null,
+    "status": "active",
+    "userId": "user_1",
+    "views": 200,
+    "tags": [],
+    "createdAt": "2025-04-01T11:25:00Z",
+    "updatedAt": "2025-04-01T11:25:00Z",
+    "redirects": []
+  }
+]

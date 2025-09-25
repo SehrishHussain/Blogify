@@ -3,7 +3,7 @@
 Blogify is a modern blogging application that provides a seamless writing and reading experience. It is built with React on the frontend, Appwrite for backend services (mocked here due to quota limits), and Redux for state management.  
 
 This repository contains the **mock-data version** of Blogify, where posts and users are stored locally.  
- A fully Appwrite-integrated version is available here: [Link to Appwrite Repo]  
+ A fully Appwrite-integrated version is available here: [https://github.com/SehrishHussain/react/tree/master/MegaBlogAppwrite]  
 
 ---
 

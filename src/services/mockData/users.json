@@ -3,6 +3,7 @@
     "id": "user_1",
     "name": "Alice Khan",
     "email": "alice@example.com",
+    "password": "$2b$10$gRADxsZYtdOX0VQLcsV6UujWLoStuD7Oi77tBHD9jVCC1EzzrK9ni",
     "prefs": {
       "role": "admin"
     },
@@ -18,6 +19,7 @@
     "id": "user_2",
     "name": "Bilal Ahmed",
     "email": "bilal@example.com",
+    "password": "$2b$10$GU9NEz03zRqnNKP/3PeGNu2Ye9gfTL7uUblvGCqgPiWlY0kf5/zW2",
     "prefs": {
       "role": "author"
     },
@@ -33,6 +35,7 @@
     "id": "user_3",
     "name": "Sana Malik",
     "email": "sana@example.com",
+    "password": "$2b$10$QKBceyWRpw8qkPXoxj4k2e2T7A.5udv.tLPwDXwWpJrHa3istjuwK",
     "prefs": {
       "role": "reader"
     },

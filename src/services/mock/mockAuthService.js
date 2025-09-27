@@ -1,6 +1,8 @@
-import users from "../mockData/users.json";
+import usersSeed from "../mockData/users.json";
+import bcrypt from "bcryptjs";
 
 const USER_KEY = "mock_user_v1";
+const USERS_DB_KEY = "mock_users_v1"; // <-- local DB of users
 const delay = (ms = 150) => new Promise(resolve => setTimeout(resolve, ms));
 
 function _mapUser(u) {
@@ -14,8 +16,23 @@ function _mapUser(u) {
     $updatedAt: u.updatedAt || u.createdAt || new Date().toISOString()
   };
 }
+
+// --- Helpers to manage "local DB" ---
+function _loadUsers() {
+  const raw = localStorage.getItem(USERS_DB_KEY);
+  if (raw) return JSON.parse(raw);
+  // initialize from seed
+  localStorage.setItem(USERS_DB_KEY, JSON.stringify(usersSeed));
+  return [...usersSeed];
+}
+
+function _saveUsers(list) {
+  localStorage.setItem(USERS_DB_KEY, JSON.stringify(list));
+}
+
 async function createAccount({ name, email, password }) {
   await delay();
+  const users = _loadUsers();
 
   // Check if user already exists
   let existing = users.find(u => u.email === email);
@@ -23,18 +40,20 @@ async function createAccount({ name, email, password }) {
     throw new Error("User already exists");
   }
 
+  const hashedPassword = await bcrypt.hash(password, 10);
+
   // Fake new user object
   const newUser = {
     id: Date.now().toString(),
     name,
     email,
-    password, // ⚠️ In real backend, you'd hash this
+    password: hashedPassword, 
     role: "reader",
     createdAt: new Date().toISOString()
   };
 
-  // For demo: push to mock array (not persistent across reloads)
   users.push(newUser);
+  _saveUsers(users);
 
   // Simulate login after signup
   const token = "mock-token-" + btoa(newUser.id + ":" + Date.now());
@@ -47,11 +66,16 @@ async function createAccount({ name, email, password }) {
 
 async function login(email, password) {
   await delay();
-  // For now ignore password check
-  let user = users.find(u => u.email === email);
+  const users = _loadUsers();
+
+ const user = users.find(u => u.email === email);
   if (!user) {
-    // fallback to first mock user
-    user = users[0];
+    throw new Error("Invalid email or password");
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error("Invalid email or password");
   }
 
   const token = "mock-token-" + btoa(user.id + ":" + Date.now());

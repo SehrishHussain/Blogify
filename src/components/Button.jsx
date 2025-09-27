@@ -1,20 +1,36 @@
-import React from 'react'
+import React from "react";
+import { motion } from "framer-motion";
 
-function Button( {
-    children,  // could be button text and written button text in return as well
-    type = 'button',
-    bgColor ='bg-blue-600',
-    textColor = 'text-white',
-    className = '',
-    ...props
+function Button({
+  children,
+  type = "button",
+  bgColor = "bg-blue-600",
+  textColor = "text-white",
+  className = "",
+  animate = false, // 🔥 allow motion toggle
+  ...props
 }) {
+  const baseStyles = `
+    px-4 py-2 rounded-lg font-medium
+    transition-all duration-200 ease-in-out
+    focus:outline-none focus:ring-2 focus:ring-offset-2
+    hover:scale-[1.03] active:scale-[0.97]
+    shadow-sm hover:shadow-md
+  `;
+
+  const Comp = animate ? motion.button : "button";
+
   return (
-    <button className={`px-4 py-2 rounded-lg 
-    ${bgColor} ${textColor}
-    ${className}`}{...props}>
-      {children}  
-    </button>
-  )
+    <Comp
+      type={type}
+      className={`${baseStyles} ${bgColor} ${textColor} ${className}`}
+      whileHover={animate ? { y: -2 } : {}}
+      whileTap={animate ? { scale: 0.95 } : {}}
+      {...props}
+    >
+      {children}
+    </Comp>
+  );
 }
 
-export default Button
+export default Button;

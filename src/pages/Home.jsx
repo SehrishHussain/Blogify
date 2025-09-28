@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { blogService } from "../services";
 import { Container } from "../components";
-import { useSelector } from "react-redux";
 import PostCard from "../components/PostCard";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchPosts,
+  selectAllPosts,
+  selectPostById,
+} from "../store/postSlice";
 
 /* -------------------- Variants -------------------- */
 const sectionVariants = {
@@ -61,11 +65,10 @@ function PostGrid({ title, posts, loading, skeletonCount = 4, emptyMessage }) {
             ))
           ) : posts.length > 0 ? (
             posts.map((post) => (
-               <div
+              <div
                 key={post.id}
-            
                 className="p-3 w-full md:w-1/2 lg:w-1/3 xl:w-1/4"
-               >
+              >
                 <PostCard {...post} />
               </div>
             ))
@@ -80,48 +83,38 @@ function PostGrid({ title, posts, loading, skeletonCount = 4, emptyMessage }) {
 
 /* -------------------- Home -------------------- */
 function Home() {
-  const [posts, setPosts] = useState([]);
-  const [userPosts, setUserPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const posts = useSelector(selectAllPosts);
+  const postStatus = useSelector((state) => state.posts.status);
+  const error = useSelector((state) => state.posts.error);
 
-  const authStatus = useSelector((state) => state.auth.userData);
-  console.log("authStatus:", authStatus);
+  const authUser = useSelector((state) => state.auth.userData);
 
+  // Fetch posts on mount
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const allPosts = await blogService.getPosts();
-        console.log("allPosts:", allPosts);
-        
-        if (allPosts) setPosts(allPosts.documents);
-
-        if (authStatus?.id) {
-          const userRes = await blogService.getUserPosts(authStatus.id);
-          console.log("userRes:", userRes);
-          
-          if (userRes) setUserPosts(userRes.documents);
-          console.log("userPosts:", userPosts);
-          
-        }
-      } catch (error) {
-        console.error("Failed to fetch posts:", error);
-      } finally {
-        setLoading(false);
-      }
+    if (postStatus === "idle") {
+      dispatch(fetchPosts());
     }
-    fetchData();
-  }, [authStatus]);
+  }, [postStatus, dispatch]);
 
   // Derived lists
   const trendingPosts = [...posts]
     .sort((a, b) => (b.views || 0) - (a.views || 0))
     .slice(0, 4);
-    console.log("trendingPosts:", trendingPosts);
-    
 
   const latestPosts = [...posts]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 8);
+
+  const userPosts = authUser
+    ? posts.filter((p) => p.userId === authUser?.user?.id)
+    : [];
+console.log("userPosts", userPosts);
+console.log("posts", posts);
+console.log("authUser", authUser);
+
+
+  const loading = postStatus === "loading";
 
   return (
     <div className="w-full mt-0">
@@ -164,7 +157,7 @@ function Home() {
       />
 
       {/* My Blogs */}
-      {authStatus && (
+      {authUser && (
         <PostGrid
           title="My Blogs"
           posts={userPosts}

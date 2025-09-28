@@ -73,12 +73,10 @@ async function getPosts({ q, limit = 20, offset = 0 } = {}) {
     );
   }
 
-  const total = posts.length;
-  const documents = posts.slice(offset, offset + limit);
-  return { total, documents };
+  return posts.slice(offset, offset + limit); // ✅ return array only
 }
 
-// Fetch a single post (no increment here!)
+// Fetch a single post (increments views)
 async function getPost(slug) {
   await delay();
   const posts = _loadPosts();
@@ -87,25 +85,17 @@ async function getPost(slug) {
   );
   if (idx === -1) return null;
 
-  // ✅ Increment views directly here
   posts[idx].views = (posts[idx].views || 0) + 1;
   _savePosts(posts);
 
-  return { ...posts[idx] }; // return updated post
+  return { ...posts[idx] };
 }
-
-
-
-
 
 // Fetch posts by a user
 async function getUserPosts(userId, { limit = 20, offset = 0 } = {}) {
   await delay();
   const posts = _loadPosts().filter((p) => p.userId === userId);
-
-  const total = posts.length;
-  const documents = posts.slice(offset, offset + limit);
-  return { total, documents };
+  return posts.slice(offset, offset + limit); // ✅ return array only
 }
 
 // Fetch post by id
@@ -120,10 +110,8 @@ async function createPost({ title, content, userId, featuredImage }) {
   await delay();
   const posts = _loadPosts();
   const id = String(Date.now());
-  // userId = authStatus.id
   const now = new Date().toISOString();
 
-  // Generate unique slug
   let baseSlug = slugify(title);
   let slug = baseSlug;
   let counter = 1;
@@ -131,9 +119,7 @@ async function createPost({ title, content, userId, featuredImage }) {
     slug = `${baseSlug}-${counter++}`;
   }
 
-  // Auto inject placeholder image if none provided
   const defaultImage = `https://picsum.photos/600/300?random=${Date.now()}`;
-  console.log("✅ Saving post with userId:", userId);
 
   const newPost = _normalize({
     id,
@@ -187,9 +173,10 @@ async function updatePost(id, patch) {
 // Delete a post
 async function deletePost(id) {
   await delay();
-  const posts = _loadPosts();
-  _savePosts(posts.filter((p) => p.id !== id));
-  return { success: true };
+  let posts = _loadPosts();
+  posts = posts.filter((p) => p.id !== id);
+  _savePosts(posts);
+  return id; // ✅ return deleted id
 }
 
 // Reset mock data
@@ -209,5 +196,4 @@ export default {
   deletePost,
   resetDemoData,
   getPost,
- 
 };

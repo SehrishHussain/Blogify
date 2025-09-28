@@ -8,7 +8,7 @@ const delay = (ms = 150) => new Promise(resolve => setTimeout(resolve, ms));
 function _mapUser(u) {
   if (!u) return null;
   return {
-    $id: u.id,
+    id: u.id,
     name: u.name,
     email: u.email,
     role: u.role || "reader",

@@ -5,57 +5,123 @@ import { Container } from "../components";
 import { useSelector } from "react-redux";
 import PostCard from "../components/PostCard";
 
+/* -------------------- Variants -------------------- */
+const sectionVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" },
+  },
+};
+
+const listVariants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.15 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+};
+
+/* -------------------- Skeleton -------------------- */
+const SkeletonCard = () => (
+  <div className="animate-pulse p-3 w-full md:w-1/2 lg:w-1/3 xl:w-1/4">
+    <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
+    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+  </div>
+);
+
+/* -------------------- PostGrid -------------------- */
+function PostGrid({ title, posts, loading, skeletonCount = 4, emptyMessage }) {
+  return (
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={sectionVariants}
+      className="py-12"
+    >
+      <Container>
+        <h2 className="text-2xl font-semibold mb-6 text-left">{title}</h2>
+        <motion.div
+          className="flex flex-wrap"
+          variants={listVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+        >
+          {loading ? (
+            Array.from({ length: skeletonCount }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))
+          ) : posts.length > 0 ? (
+            posts.map((post) => (
+               <div
+                key={post.id}
+            
+                className="p-3 w-full md:w-1/2 lg:w-1/3 xl:w-1/4"
+               >
+                <PostCard {...post} />
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500">{emptyMessage}</p>
+          )}
+        </motion.div>
+      </Container>
+    </motion.section>
+  );
+}
+
+/* -------------------- Home -------------------- */
 function Home() {
   const [posts, setPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
-  const authStatus = useSelector((state) => state.auth.userData); // user object
+  const [loading, setLoading] = useState(true);
+
+  const authStatus = useSelector((state) => state.auth.userData);
+  console.log("authStatus:", authStatus);
 
   useEffect(() => {
-    // Fetch all posts
-    blogService.getPosts().then((res) => {
-      if (res) setPosts(res.documents);
-    });
+    async function fetchData() {
+      try {
+        const allPosts = await blogService.getPosts();
+        console.log("allPosts:", allPosts);
+        
+        if (allPosts) setPosts(allPosts.documents);
 
-    // Fetch only this user's posts
-    if (authStatus?.$id) {
-      blogService.getUserPosts(authStatus.$id).then((res) => {
-        if (res) setUserPosts(res.documents);
-      });
+        if (authStatus?.id) {
+          const userRes = await blogService.getUserPosts(authStatus.id);
+          console.log("userRes:", userRes);
+          
+          if (userRes) setUserPosts(userRes.documents);
+          console.log("userPosts:", userPosts);
+          
+        }
+      } catch (error) {
+        console.error("Failed to fetch posts:", error);
+      } finally {
+        setLoading(false);
+      }
     }
+    fetchData();
   }, [authStatus]);
 
-  // 🔥 Sort helpers
+  // Derived lists
   const trendingPosts = [...posts]
     .sort((a, b) => (b.views || 0) - (a.views || 0))
     .slice(0, 4);
+    console.log("trendingPosts:", trendingPosts);
+    
 
   const latestPosts = [...posts]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     .slice(0, 8);
-
-  // Framer Motion Variants
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
-  };
-
-  const listVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.15,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-  };
 
   return (
     <div className="w-full mt-0">
@@ -73,114 +139,39 @@ function Home() {
             Welcome to <span className="text-pink-600">Blogify</span> 🚀
           </h1>
           <p className="text-lg text-gray-700 dark:text-gray-300 max-w-xl mx-auto">
-            Share your thoughts, discover trending posts, and grow your voice in the
-            community.
+            Share your thoughts, discover trending posts, and grow your voice in
+            the community.
           </p>
         </Container>
       </motion.section>
 
       {/* Trending */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-        className="py-12"
-      >
-        <Container>
-          <h2 className="text-2xl font-semibold mb-6 text-left">🔥 Trending Posts</h2>
-          <motion.div
-            className="flex flex-wrap"
-            variants={listVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            {trendingPosts.length > 0 ? (
-              trendingPosts.map((post) => (
-                <motion.div
-                  key={post.id}
-                  variants={itemVariants}
-                  className="p-3 w-full md:w-1/2 lg:w-1/3 xl:w-1/4"
-                >
-                  <PostCard {...post} />
-                </motion.div>
-              ))
-            ) : (
-              <p className="text-gray-500">No trending posts yet.</p>
-            )}
-          </motion.div>
-        </Container>
-      </motion.section>
+      <PostGrid
+        title="Trending Posts"
+        posts={trendingPosts}
+        loading={loading}
+        skeletonCount={4}
+        emptyMessage="No trending posts yet."
+      />
 
       {/* Latest */}
-      <motion.section
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={sectionVariants}
-        className="py-12 bg-gray-50 dark:bg-gray-800/50"
-      >
-        <Container>
-          <h2 className="text-2xl font-semibold mb-6 text-left">🆕 Latest Uploads</h2>
-          <motion.div
-            className="flex flex-wrap"
-            variants={listVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
-          >
-            {latestPosts.length > 0 ? (
-              latestPosts.map((post) => (
-                <motion.div
-                  key={post.id}
-                  variants={itemVariants}
-                  className="p-3 w-full md:w-1/2 lg:w-1/3 xl:w-1/4"
-                >
-                  <PostCard {...post} />
-                </motion.div>
-              ))
-            ) : (
-              <p className="text-gray-500">No posts available.</p>
-            )}
-          </motion.div>
-        </Container>
-      </motion.section>
+      <PostGrid
+        title="Latest Uploads"
+        posts={latestPosts}
+        loading={loading}
+        skeletonCount={8}
+        emptyMessage="No posts available."
+      />
 
       {/* My Blogs */}
       {authStatus && (
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={sectionVariants}
-          className="py-12"
-        >
-          <Container>
-            <h2 className="text-2xl font-semibold mb-6 text-left">✍️ My Blogs</h2>
-            <motion.div
-              className="flex flex-wrap"
-              variants={listVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-            >
-              {userPosts.length > 0 ? (
-                userPosts.map((post) => (
-                  <motion.div
-                    key={post.id}
-                    variants={itemVariants}
-                    className="p-3 w-full md:w-1/2 lg:w-1/3 xl:w-1/4"
-                  >
-                    <PostCard {...post} />
-                  </motion.div>
-                ))
-              ) : (
-                <p className="text-gray-500">You haven’t written any blogs yet.</p>
-              )}
-            </motion.div>
-          </Container>
-        </motion.section>
+        <PostGrid
+          title="My Blogs"
+          posts={userPosts}
+          loading={loading}
+          skeletonCount={2}
+          emptyMessage="You haven’t written any blogs yet."
+        />
       )}
     </div>
   );

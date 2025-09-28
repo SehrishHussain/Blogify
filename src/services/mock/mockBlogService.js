@@ -120,6 +120,7 @@ async function createPost({ title, content, userId, featuredImage }) {
   await delay();
   const posts = _loadPosts();
   const id = String(Date.now());
+  // userId = authStatus.id
   const now = new Date().toISOString();
 
   // Generate unique slug

@@ -18,7 +18,7 @@ export default function PostForm({ post }) {
 
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
-  console.log("🔥 userData from Redux:", userData);
+  console.log("userData from Redux:", userData);
 
   const [loading, setLoading] = useState(false);
 
@@ -45,7 +45,7 @@ export default function PostForm({ post }) {
         const dbPost = await blogService.createPost(
           {
             ...data,
-            userId: userData.$id,
+            userId: userData.id,
           },
           dispatch
         );
@@ -119,7 +119,7 @@ export default function PostForm({ post }) {
         {post && post.featuredImage && (
           <div className="w-full mb-4">
             <img
-              src={post.featuredImage}
+              src={post.featuredImage }
               alt={post.title}
               className="rounded-lg"
             />

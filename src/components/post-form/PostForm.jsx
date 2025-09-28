@@ -19,6 +19,7 @@ export default function PostForm({ post }) {
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
   console.log("userData from Redux:", userData);
+  console.log("userData.user.id", userData?.id);
 
   const [loading, setLoading] = useState(false);
 
@@ -45,7 +46,7 @@ export default function PostForm({ post }) {
         const dbPost = await blogService.createPost(
           {
             ...data,
-            userId: userData.id,
+            userId: userData?.id,
           },
           dispatch
         );
@@ -56,6 +57,8 @@ export default function PostForm({ post }) {
     } finally {
       setLoading(false);
     }
+    console.log("✅ Saving post with userId:", userData.user.id);
+
   };
 
   const slugTransform = useCallback((value) => {

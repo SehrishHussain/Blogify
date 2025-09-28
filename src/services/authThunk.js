@@ -26,7 +26,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, { dispatch }) => {
     const data = await mockAuthService.login(email, password); // 👈 use service
-    dispatch(loginAction(data.user));
+    dispatch(loginAction(data));
     return data;
   }
 );

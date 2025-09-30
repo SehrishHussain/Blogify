@@ -21,6 +21,8 @@ function EditPost() {
 
   const handleUpdate = async (updatedPost) => {
     const res = await blogService.updatePost(post.id, updatedPost);
+    console.log("res from updatePost in EditPost", res);
+    
     if (res) {
       navigate(`/post/${res.slug}`); // go to updated post page
     }

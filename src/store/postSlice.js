@@ -21,11 +21,15 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
 
 export const addPost = createAsyncThunk("posts/addPost", async (newPost) => {
   const res = await blogService.createPost(newPost);
+  console.log("PostSlice- createPost");
+  
   return res; // should return the created post
 });
 
 export const updatePost = createAsyncThunk("posts/updatePost", async (post) => {
   const res = await blogService.updatePost(post.id, post);
+  console.log("value of post.id in postSlice", post.id);
+  
   return res; // should return the updated post
 });
 

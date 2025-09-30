@@ -5,29 +5,35 @@ import { useNavigate , useParams } from 'react-router-dom'
 
 
 function EditPost() {
-    const [post, setPosts] = useState(null)
-    const {slug} = useParams()
-    const navigate = useNavigate()
+  const [post, setPost] = useState(null);  // small typo fix: setPost not setPosts
+  const { slug } = useParams();
+  const navigate = useNavigate();
 
-    useEffect (() => {
-        if (slug) {
-        blogService.getPost(slug).then((post) => {
-            if (post) {
-                setPosts(post)
-            }
-            })
-            } else {
-                navigate('/')
-            }
-        
-    }, [slug, navigate])
+  useEffect(() => {
+    if (slug) {
+      blogService.getPost(slug).then((fetchedPost) => {
+        if (fetchedPost) setPost(fetchedPost);
+      });
+    } else {
+      navigate("/");
+    }
+  }, [slug, navigate]);
+
+  const handleUpdate = async (updatedPost) => {
+    const res = await blogService.updatePost(post.id, updatedPost);
+    if (res) {
+      navigate(`/post/${res.slug}`); // go to updated post page
+    }
+  };
+
   return post ? (
-    <div className='py-8'>
-        <Container>
-            <PostForm post={post} />
-        </Container>
+    <div className="py-8">
+      <Container>
+        <PostForm post={post} onSubmit={handleUpdate} />
+      </Container>
     </div>
-  ) : null
+  ) : null;
 }
+
 
 export default EditPost

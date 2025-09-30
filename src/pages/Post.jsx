@@ -14,7 +14,11 @@ export default function Post() {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const userData = useSelector((state) => state.auth.userData);
-  const isAuthor = post && userData ? post.userId === userData.$id : false;
+  console.log("userData in Post", userData);
+  console.log("userData.userData.user.id in POST", userData.user.id);
+  console.log("post in Post", post);
+  
+  const isAuthor = post && userData ? post.userId === userData.user.id : false;
 
  useEffect(() => {
     if (!slug || hasIncremented.current) return;

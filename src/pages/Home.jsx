@@ -85,6 +85,8 @@ function PostGrid({ title, posts, loading, skeletonCount = 4, emptyMessage }) {
 function Home() {
   const dispatch = useDispatch();
   const posts = useSelector(selectAllPosts);
+  console.log("posts from store", posts);
+  
   const postStatus = useSelector((state) => state.posts.status);
   const error = useSelector((state) => state.posts.error);
 
@@ -111,7 +113,7 @@ function Home() {
     : [];
 console.log("userPosts", userPosts);
 console.log("posts", posts);
-console.log("authUser", authUser);
+console.log("authUserrrrr", authUser);
 
 
   const loading = postStatus === "loading";

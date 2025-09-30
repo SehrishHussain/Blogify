@@ -12,7 +12,7 @@ export const signupThunk = createAsyncThunk(
       const res = await mockAuthService.createAccount(formData);
 
       // res should look like { user, token }
-      dispatch(loginAction(res.user)); // ✅ save user into Redux
+      dispatch(loginAction(res)); // ✅ save user into Redux
 
       return res;
     } catch (err) {
@@ -44,7 +44,7 @@ export const hydrateUser = createAsyncThunk(
   async (_, { dispatch }) => {
     const data = await mockAuthService.getCurrentUser(); // 👈 use service
     if (data) {
-      dispatch(loginAction(data.user));
+      dispatch(loginAction(data));
     }
     return data;
   }

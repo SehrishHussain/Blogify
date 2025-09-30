@@ -108,6 +108,8 @@ async function getPostById(id) {
 // Create a post
 async function createPost({ title, content, userId, featuredImage }) {
   await delay();
+  console.log("userId in createPost", userId);
+  
   const posts = _loadPosts();
   const id = String(Date.now());
   const now = new Date().toISOString();
@@ -141,6 +143,10 @@ async function createPost({ title, content, userId, featuredImage }) {
 
 // Update a post
 async function updatePost(id, patch) {
+  console.log("id of updatepost", id);
+  console.log("patch of updatepost", patch);
+  
+  
   await delay();
   const posts = _loadPosts();
   const idx = posts.findIndex((p) => p.id === id);

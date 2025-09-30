@@ -26,15 +26,23 @@ export default function PostForm({ post }) {
     try {
       if (post) {
         // ✅ Update post through thunk
+        console.log("postId in submit of POSTFORM", post.id);
+        
         const updated = await dispatch(
-          updatePost({ postId: post.id, data })
+          updatePost(  post.id, data )
         ).unwrap();
+        console.log("data in updatePost in POSTFORM", data);
+        
         if (updated) navigate(`/post/${updated.slug}`);
       } else {
         // ✅ Create post through thunk
+        console.log("userData before creating post", userData);
+        
         const created = await dispatch(
-          addPost({ ...data, userId: userData?.id })
+          addPost({ ...data, userId: userData.user.id })
         ).unwrap();
+        console.log("post created in PostForm", created);
+        
         if (created) navigate(`/post/${created.slug}`);
       }
     } catch (err) {

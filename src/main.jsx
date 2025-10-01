@@ -13,6 +13,8 @@ import Signup from './pages/Signup'
 import EditPost from "./pages/EditPost";
 import OAuthCallback from './pages/OAuthCallback.jsx'
 import Post from "./pages/Post";
+import Profile from './pages/Profile.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 
 import AllPosts from "./pages/AllPosts";
 
@@ -76,6 +78,14 @@ const router = createBrowserRouter([
     {
       path: "/oauth-callback",
       element: <OAuthCallback />
+    },
+     {
+      path: "/profile",
+      element: <Profile />
+    },
+     {
+      path: "/dashboard",
+      element: <Dashboard />
     }
     ]
   }

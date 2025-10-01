@@ -50,16 +50,39 @@ export default function Post() {
         {isAuthor && (
           <div className="flex justify-end mb-4 space-x-3">
             <Link to={`/edit-post/${post.slug}`}>
-              <Button className="min-w-[96px] rounded-full px-5 py-2 bg-green-500 text-white hover:bg-green-600 transition-colors dark:bg-green-600 dark:hover:bg-green-700">
-                Edit
-              </Button>
+      <Button
+  className="min-w-[110px] rounded-full px-6 py-2.5 
+  bg-gradient-to-br from-[#e2cbb8] to-[#d1b7a1] 
+  text-gray-800 shadow-sm border border-[#c9b39a]
+  hover:scale-105 hover:shadow-md 
+  focus:ring-2 focus:ring-[#d1b7a1] focus:outline-none
+  dark:from-gray-700 dark:to-gray-600
+  dark:text-gray-200 dark:border-gray-700
+  dark:hover:from-gray-600 dark:hover:to-gray-500
+  dark:focus:ring-gray-500
+  transition-all duration-300"
+>
+  Edit
+</Button>
+
+
+
+
             </Link>
             <Button
-              onClick={() => setShowConfirm(true)}
-              className="min-w-[96px] rounded-full px-5 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors"
-            >
-              Delete
-            </Button>
+  onClick={() => setShowConfirm(true)}
+  className="min-w-[110px] rounded-full px-6 py-2.5 
+  bg-rose-700 text-white shadow-sm border border-rose-600
+  hover:bg-rose-800 hover:scale-105 
+  focus:ring-2 focus:ring-rose-600 focus:outline-none
+  dark:bg-rose-800 dark:border-rose-700
+  dark:hover:bg-rose-700 
+  dark:focus:ring-rose-700 
+  transition-all duration-300"
+>
+  Delete
+</Button>
+
           </div>
         )}
 

@@ -9,6 +9,6 @@ export default defineConfig(({ mode }) => {
     define: {
       'import.meta.env.VITE_USE_MOCK': JSON.stringify(env.VITE_USE_MOCK || 'false'),
     },
-    base: process.env.VITE_BASE_PATH || "/Blogify",
+    base: '/',
   }
 })

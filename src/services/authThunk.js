@@ -21,6 +21,19 @@ export const signupThunk = createAsyncThunk(
   }
 );
 
+export const googleLoginThunk = createAsyncThunk(
+  "auth/googleLogin",
+  async (googleUser, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await mockAuthService.loginWithGoogle(googleUser);
+      dispatch(loginAction(res)); // ✅ save user in Redux
+      return res;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",

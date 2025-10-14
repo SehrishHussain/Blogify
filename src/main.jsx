@@ -5,8 +5,10 @@ import './index.css'
 import { Provider } from 'react-redux'
 import store from './store/store.js'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import Home from './pages/Home.jsx'
 import { AuthLayout, Login } from './components/index.js'
+const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 import AddPost from "./pages/Addpost.jsx";
 import Signup from './pages/Signup'
@@ -92,8 +94,10 @@ const router = createBrowserRouter([
 ])
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <Provider store={store}>
-    <RouterProvider router={router}/>
-    </Provider>
-  </React.StrictMode>,
+    <GoogleOAuthProvider clientId={clientId}>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+    </GoogleOAuthProvider>
+  </React.StrictMode>
 )

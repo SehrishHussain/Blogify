@@ -12,6 +12,7 @@
     "hash:users": "node scripts/hashUsers.js"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.12.2",
     "@reduxjs/toolkit": "^2.2.5",
     "@tinymce/tinymce-react": "^5.1.1",
     "appwrite": "^14.0.1",
@@ -19,6 +20,7 @@
     "bcryptjs": "^3.0.2",
     "framer-motion": "^12.23.12",
     "html-react-parser": "^5.1.10",
+    "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.5",

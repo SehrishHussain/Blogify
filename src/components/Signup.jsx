@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Input, Logo } from "./index";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { signupThunk } from "../services/authThunk";
+import { signupThunk, googleLoginThunk } from "../services/authThunk";
+import { useGoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 function Signup() {
   const navigate = useNavigate();
@@ -11,34 +13,51 @@ function Signup() {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
 
-const create = async (data) => {
-  setError("");
-  try {
-    // ✅ dispatch signup thunk
-    const { user, token } = await dispatch(signupThunk(data)).unwrap();
-    dispatch(authLogin({ user, token }));
-
-    // ✅ navigate after successful signup
-    navigate("/");
-
-    // (Optional) — if you want to log or toast
-    console.log("User signed up:", user, "Token:", token);
-  } catch (err) {
-    // err here is the rejectWithValue payload or the thrown error
-    console.error("Error creating account:", err);
-    setError(typeof err === "string" ? err : err.message || "Failed to create account");
-  }
-};
-
-
-  const signupWithGoogle = () => {
+  // --- Email/password signup ---
+  const create = async (data) => {
+    setError("");
     try {
-      // If you want to support Google login, add a thunk for it too
-      authService.loginWithGoogle();
+      const { user, token } = await dispatch(signupThunk(data)).unwrap();
+      navigate("/");
+      console.log("User signed up:", user, "Token:", token);
     } catch (err) {
-      setError(err.message);
+      console.error("Error creating account:", err);
+      setError(
+        typeof err === "string" ? err : err.message || "Failed to create account"
+      );
     }
   };
+
+  // --- Google signup/login ---
+  const signupWithGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        // decode Google credential to get user info
+        const userInfoResponse = await fetch(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+          }
+        );
+        const decoded = await userInfoResponse.json();
+
+        const googleUser = {
+          googleId: decoded.sub,
+          name: decoded.name,
+          email: decoded.email,
+          picture: decoded.picture,
+        };
+
+        const { user } = await dispatch(googleLoginThunk(googleUser)).unwrap();
+        console.log("Google user logged in:", user);
+        navigate("/");
+      } catch (err) {
+        console.error("Google login failed:", err);
+        setError(err.message || "Google login failed");
+      }
+    },
+    onError: () => setError("Google login failed"),
+  });
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900 transition-colors">
@@ -80,7 +99,7 @@ const create = async (data) => {
                 validate: {
                   matchPattern: (value) =>
                     /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                    "Email address must be a valid address",
+                    "Email address must be valid",
                 },
               })}
             />
@@ -101,12 +120,11 @@ const create = async (data) => {
           <span className="h-px w-1/3 bg-gray-300 dark:bg-gray-600" />
           <span className="px-4 text-sm text-gray-500 dark:text-gray-400">OR</span>
           <span className="h-px w-1/3 bg-gray-300 dark:bg-gray-600" />
-          <span className="h-px w-1/3 bg-gray-300 dark:bg-gray-600" />
         </div>
 
-        {/* Google Signup */}
+        {/* Google Signup Button */}
         <Button
-          onClick={signupWithGoogle}
+          onClick={() => signupWithGoogle()}
           className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white"
         >
           <img

@@ -85,6 +85,33 @@ async function login(email, password) {
   localStorage.setItem(USER_KEY, JSON.stringify(payload));
   return payload;
 }
+  async function loginWithGoogle(googleUser) {
+  await delay();
+
+  const users = _loadUsers();
+  let existing = users.find(u => u.email === googleUser.email);
+
+  if (!existing) {
+    const newUser = {
+      id: googleUser.googleId || ("google-" + Date.now().toString()),
+      name: googleUser.name,
+      email: googleUser.email,
+      picture: googleUser.picture,
+      role: "reader",
+      createdAt: new Date().toISOString(),
+    };
+    users.push(newUser);
+    _saveUsers(users);
+    existing = newUser;
+  }
+
+  const token = "mock-google-token-" + btoa(existing.id + ":" + Date.now());
+  const payload = { user: _mapUser(existing), token };
+
+  localStorage.setItem(USER_KEY, JSON.stringify(payload));
+  return payload;
+}
+
 
 async function logout() {
   localStorage.removeItem(USER_KEY);
@@ -109,6 +136,7 @@ async function getCurrentUser() {
 
 export default {
   login,
+  loginWithGoogle,
   logout,
   getCurrentUser,
   createAccount

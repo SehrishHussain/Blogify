@@ -3,8 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Input, Logo } from "./index";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { loginUser } from "../services/authThunk";
-import { authService } from "../services"; // still used for Google login (unless you add a thunk later)
+import { loginUser, googleLoginThunk  } from "../services/authThunk";
+import { authService } from "../services"; 
+import { useGoogleLogin } from "@react-oauth/google";
 
 function Login() {
   const navigate = useNavigate();
@@ -29,14 +30,38 @@ function Login() {
     }
   };
 
-  // Google OAuth login (direct for now)
-  const loginWithGoogle = async () => {
-    try {
-      authService.loginWithGoogle(); // 🔹 Can later wrap this in a thunk too
-    } catch (err) {
-      setError(err.message);
-    }
-  };
+// --- Google OAuth login (manual trigger)
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        // Get user info from Google API
+        const userInfoResponse = await fetch(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+          }
+        );
+        const decoded = await userInfoResponse.json();
+
+        const googleUser = {
+          googleId: decoded.sub,
+          name: decoded.name,
+          email: decoded.email,
+          picture: decoded.picture,
+        };
+
+        // Dispatch Redux thunk to handle backend or mock logic
+        const { user } = await dispatch(googleLoginThunk(googleUser)).unwrap();
+        console.log("Google user logged in:", user);
+
+        navigate("/");
+      } catch (err) {
+        console.error("Google login failed:", err);
+        setError(err.message || "Google login failed");
+      }
+    },
+    onError: () => setError("Google login failed"),
+  });
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-white dark:bg-gray-900 transition-colors">

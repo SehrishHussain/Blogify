@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 export default function PostCard({ id, title, slug, featuredImage, views }) {
   const imgUrl = featuredImage;
-console.log("trending posts in PostCard");
+
 
   return (
     <motion.div

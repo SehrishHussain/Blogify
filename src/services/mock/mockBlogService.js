@@ -10,6 +10,7 @@ function _normalize(post) {
     title: post.title,
     content: post.content,
     userId: post.userId || post.author || null,
+    authorName: post.authorName || "Unknown Author", // 🟢 ADD THIS
     tags: post.tags || [],
     createdAt: post.createdAt || new Date().toISOString(),
     updatedAt: post.updatedAt || post.createdAt || new Date().toISOString(),
@@ -19,6 +20,7 @@ function _normalize(post) {
     views: post.views || 0,
   };
 }
+
 
 function _ensureInitialized() {
   if (localStorage.getItem(STORAGE_KEY)) return;
@@ -78,6 +80,8 @@ async function getPosts({ q, limit = 20, offset = 0 } = {}) {
 
 // Fetch a single post (increments views)
 async function getPost(slug) {
+  console.log("GET POST CALLED", slug);
+  
   await delay();
   const posts = _loadPosts();
   const idx = posts.findIndex(
@@ -106,10 +110,10 @@ async function getPostById(id) {
 }
 
 // Create a post
-async function createPost({ title, content, userId, featuredImage }) {
+async function createPost({ title, content, userId, authorName, featuredImage }) {
   await delay();
   console.log("userId in createPost", userId);
-  
+
   const posts = _loadPosts();
   const id = String(Date.now());
   const now = new Date().toISOString();
@@ -128,6 +132,7 @@ async function createPost({ title, content, userId, featuredImage }) {
     title,
     content,
     userId,
+    authorName, // 🟢 ADD THIS
     createdAt: now,
     updatedAt: now,
     tags: [],
@@ -140,6 +145,7 @@ async function createPost({ title, content, userId, featuredImage }) {
   _savePosts(posts);
   return newPost;
 }
+
 
 // Update a post
 async function updatePost(id, patch) {

@@ -32,7 +32,7 @@
     }
   },
   {
-    "id": "user_3",
+    "id": "user_4",
     "name": "Sana Malik",
     "email": "sana@example.com",
     "password": "$2b$10$QKBceyWRpw8qkPXoxj4k2e2T7A.5udv.tLPwDXwWpJrHa3istjuwK",
@@ -40,11 +40,60 @@
       "role": "reader"
     },
     "profile": {
-      "userId": "user_3",
+      "userId": "user_10",
       "displayName": "Sana",
       "bio": "Loves reading blogs and sharing feedback.",
       "avatarId": null,
       "createdAt": "2025-03-15T18:20:00Z"
     }
+  },
+    {
+    "id": "user_10",
+    "name": "Sona Mc Zee",
+    "email": "sona@example.com",
+    "password": "$2b$10$QKBceyWRpw8qkPXoxj4k2e2T7A.5udv.tLPwDXwWpJrHa3istjuwK",
+    "prefs": {
+      "role": "reader"
+    },
+    "profile": {
+      "userId": "user_10",
+      "displayName": "Sana",
+      "bio": "Loves reading blogs and sharing feedback.",
+      "avatarId": null,
+      "createdAt": "2025-03-15T18:20:00Z"
+    }
+  },
+    {
+    "id": "user_9",
+    "name": "Malik Ramen",
+    "email": "ramensona@example.com",
+    "password": "$2b$10$QKBceyWRpw8qkPXoxj4k2e2T7A.5udv.tLPwDXwWpJrHa3istjuwK",
+    "prefs": {
+      "role": "reader"
+    },
+    "profile": {
+      "userId": "user_9",
+      "displayName": "Ramen",
+      "bio": "Loves reading blogs and sharing feedback.",
+      "avatarId": null,
+      "createdAt": "2025-03-15T18:20:00Z"
+    }
+  },
+    {
+    "id": "user_6",
+    "name": "Micheal Scott",
+    "email": "scoot@example.com",
+    "password": "$2b$10$QKBceyWRpw8qkPXoxj4k2e2T7A.5udv.tLPwDXwWpJrHa3istjuwK",
+    "prefs": {
+      "role": "reader"
+    },
+    "profile": {
+      "userId": "user_6",
+      "displayName": "Scott",
+      "bio": "Loves reading blogs and sharing feedback.",
+      "avatarId": null,
+      "createdAt": "2025-03-15T18:20:00Z"
+    }
   }
+  
 ]

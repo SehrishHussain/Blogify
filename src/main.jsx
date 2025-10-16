@@ -19,6 +19,7 @@ import Profile from './pages/Profile.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 
 import AllPosts from "./pages/AllPosts";
+import Settings from './pages/Settings.jsx'
 
 const router = createBrowserRouter([
   {
@@ -88,7 +89,13 @@ const router = createBrowserRouter([
      {
       path: "/dashboard",
       element: <Dashboard />
-    }
+    },
+    {
+        path: "/settings",
+        element: <Settings />
+        
+        
+    },
     ]
   }
 ])

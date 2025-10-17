@@ -17,6 +17,7 @@ import OAuthCallback from './pages/OAuthCallback.jsx'
 import Post from "./pages/Post";
 import Profile from './pages/Profile.jsx'
 import Dashboard from './pages/Dashboard.jsx'
+//import SinglePost from "./pages/SinglePost.jsx";
 
 import AllPosts from "./pages/AllPosts";
 import Settings from './pages/Settings.jsx'
@@ -49,12 +50,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/all-posts",
-        element: (
-            <AuthLayout authentication>
-                {" "}
-                <AllPosts />
-            </AuthLayout>
-        ),
+        element: <AllPosts />
     },
     {
         path: "/add-post",
@@ -88,11 +84,22 @@ const router = createBrowserRouter([
     },
      {
       path: "/dashboard",
-      element: <Dashboard />
+      element:  (
+            <AuthLayout authentication>
+                {" "}
+                <Dashboard />
+            </AuthLayout>
+        ),
     },
     {
         path: "/settings",
         element: <Settings />
+        
+        
+    },
+      {
+        path: "/posts/:slug",
+        element: <Post />
         
         
     },

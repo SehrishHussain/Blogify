@@ -25,13 +25,15 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const navItems = [
-    { name: "Home", slug: "/", active: true },
-    { name: "Login", slug: "/login", active: !status },
-    { name: "Signup", slug: "/signup", active: !status },
-    { name: "All Posts", slug: "/all-posts", active: status },
-    { name: "Add Post", slug: "/add-post", active: status },
-  ];
+ const navItems = [
+  { name: "Home", slug: "/", active: true },
+  { name: "All Posts", slug: "/all-posts", active: true },
+  { name: "Login", slug: "/login", active: !status },
+  { name: "Signup", slug: "/signup", active: !status },
+  { name: "Add Post", slug: "/add-post", active: status },
+  { name: "Dashboard", slug: "/dashboard", active: status }, // 👈 Added here
+];
+
 
   const getInitials = (name) =>
     !name

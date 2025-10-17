@@ -1,12 +1,12 @@
-// pages/Dashboard.jsx
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectAllPosts } from "../store/postSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const posts = useSelector(selectAllPosts);
   const { userData } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   if (!userData) {
     return (
@@ -19,16 +19,15 @@ const Dashboard = () => {
   const userId = userData.user.id;
   const userPosts = posts.filter((post) => post.userId === userId);
 
-  // ---- Stats ----
   const totalViews = userPosts.reduce((sum, post) => sum + (post.views || 0), 0);
   const totalPosts = userPosts.length;
-  const latestPostDate =
-    userPosts[0]?.createdAt || "N/A"; // already sorted by createdAt desc in slice
+  const latestPostDate = userPosts[0]?.createdAt || "N/A";
 
   return (
     <div className="p-6 space-y-8">
       {/* ---------- Top Stats Section ---------- */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Total Posts */}
         <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
             Total Posts
@@ -38,6 +37,7 @@ const Dashboard = () => {
           </p>
         </div>
 
+        {/* Total Views */}
         <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
             Total Views
@@ -47,6 +47,7 @@ const Dashboard = () => {
           </p>
         </div>
 
+        {/* Latest Post */}
         <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
             Latest Post
@@ -64,6 +65,7 @@ const Dashboard = () => {
         <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200 p-6 border-b border-gray-200 dark:border-gray-700">
           Your Posts
         </h2>
+
         {userPosts.length === 0 ? (
           <p className="p-6 text-gray-600 dark:text-gray-400">
             You haven’t written any posts yet.
@@ -85,31 +87,25 @@ const Dashboard = () => {
                 </tr>
               </thead>
 
-<tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-  {userPosts.map((post) => (
-    <tr
-      key={post.id}
-      onClick={() => navigate(`/posts/${post.id}`)}
-      className="cursor-pointer"
-    >
-      <td
-        className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200 
-                   transform transition-transform duration-200 
-                   hover:scale-105 hover:text-indigo-500"
-      >
-        {post.title}
-      </td>
-      <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-        {post.views}
-      </td>
-      <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
-        {new Date(post.createdAt).toLocaleDateString()}
-      </td>
-    </tr>
-  ))}
-</tbody>
-
-
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                {userPosts.map((post) => (
+                  <tr
+                    key={post.id}
+                    onClick={() => navigate(`/posts/${post.slug}`)} // ✅ use slug, not id
+                    className="cursor-pointer transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200 hover:text-indigo-500">
+                      {post.title}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
+                      {post.views}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800 dark:text-gray-200">
+                      {new Date(post.createdAt).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
           </div>
         )}

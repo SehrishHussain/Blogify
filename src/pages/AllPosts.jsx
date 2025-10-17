@@ -59,8 +59,8 @@ function AllPosts() {
   initial={{ opacity: 0, y: 30 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 0.7 }}
-  className="relative z-50 mx-auto max-w-6xl text-center
-    rounded-[3rem]
+  className="relative z-10 mx-auto max-w-6xl text-center
+    rounded-[3rem] overflow-visible
     bg-gradient-to-br from-[#fffaf7]/95 via-[#fbefe3]/95 to-[#f4dfc8]/95
     dark:from-gray-800/80 dark:via-gray-750/80 dark:to-gray-700/80
     backdrop-blur-xl shadow-2xl
@@ -68,6 +68,7 @@ function AllPosts() {
     hover:shadow-3xl hover:scale-[1.01]
     mb-16"
 >
+
   <h2 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
     Filter Posts
   </h2>
